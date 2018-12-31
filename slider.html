@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>slider</title>
+<body>
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="Image-Slider-LnR.js"></script>
+		<link rel="stylesheet" type="text/css" href="Image-Slider-LnR.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="slider_wrapper">
+				<ul id="image_slider">
+					<li><img src="https://www.theshots.co.uk/wp-content/uploads/2014/08/Chelsea_logo1.jpg"></li>
+					<li><img src="http://images.footballfanatics.com/FFImage/thumb.aspx?i=/productImages%2F_2468000%2Fff_2468426_full.jpg&w=400"></li>
+					<li><img src="http://www.telegraph.co.uk/content/dam/football/2016/10/13/Screen_Shot_2016-10-13_at_14.59.32_1-xlarge_trans_NvBQzQNjv4Bqj_SZRLN8vhPOyzKIgtptSOrKS1PGncs4IMKoahSpAvE.png"></li>
+					<li><img src="https://pbs.twimg.com/profile_images/813805793199976452/A5SrxLA6.jpg"></li>
+					<li><img src="http://liputanbola88.com/wp-content/uploads/2017/02/Judi-Bola-Chelsea-vs-Swansea-Gol-Terjitu.jpg"></li>
+					<li><img src="https://www.chelseafc.com/content/cfc/en/homepage/news/boilerplate-config/latest-news/2017/04/the-data-day--chelsea-v-southampton/_jcr_content.autoteaser.jpeg"></li>
+					
+				</ul>					
+				<span class="nvgt" id="prev"></span>
+				<span class="nvgt" id="next"></span>
+			</div>
+		</div>
+	</body>
+<style>
+.container{
+	width:800px;
+	height:400px;
+	padding:20px;
+	border:1px solid gray;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	background: black;	
+}
+.slider_wrapper{
+	overflow: hidden;
+	position:relative;
+	height:280px;
+	top:auto;
+}
+#image_slider{
+
+	position: relative;
+	height: auto;
+	list-style: none;
+	overflow: hidden;
+	float: left;
+	/*Chrom default padding for ul is 40px */
+	padding:0px;
+	margin:0px;
+}
+#image_slider li{
+	position: relative;
+	float: left;
+}
+.nvgt{
+	position:absolute;
+	top: 120px;
+	height: 50px;
+	width: 30px;
+	opacity: 0.6;
+}
+.nvgt:hover{
+	opacity: 0.9;
+}
+#prev{
+	background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/prev.png') no-repeat center;
+	left: 0px;
+}
+#next{
+	background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center;
+	right: 0px;
+}
+</style>
+<script>
+var ul;
+var li_items;
+var imageNumber;
+var imageWidth;
+var prev, next;
+var currentPostion = 0;
+var currentImage = 0;
+
+
+function init(){
+	ul = document.getElementById('image_slider');
+	li_items = ul.children;
+	imageNumber = li_items.length;
+	imageWidth = li_items[0].children[0].clientWidth;
+	ul.style.width = parseInt(imageWidth * imageNumber) + 'px';
+	prev = document.getElementById("prev");
+	next = document.getElementById("next");
+	//.onclike = slide(-1) will be fired when onload;
+	/*
+	prev.onclick = function(){slide(-1);};
+	next.onclick = function(){slide(1);};*/
+	prev.onclick = function(){ onClickPrev();};
+	next.onclick = function(){ onClickNext();};
+}
+
+function animate(opts){
+	var start = new Date;
+	var id = setInterval(function(){
+		var timePassed = new Date - start;
+		var progress = timePassed / opts.duration;
+		if (progress > 1){
+			progress = 1;
+		}
+		var delta = opts.delta(progress);
+		opts.step(delta);
+		if (progress == 1){
+			clearInterval(id);
+			opts.callback();
+		}
+	}, opts.delay || 17);
+	//return id;
+}
+
+function slideTo(imageToGo){
+	var direction;
+	var numOfImageToGo = Math.abs(imageToGo - currentImage);
+	// slide toward left
+
+	direction = currentImage > imageToGo ? 1 : -1;
+	currentPostion = -1 * currentImage * imageWidth;
+	var opts = {
+		duration:1000,
+		delta:function(p){return p;},
+		step:function(delta){
+			ul.style.left = parseInt(currentPostion + direction * delta * imageWidth * numOfImageToGo) + 'px';
+		},
+		callback:function(){currentImage = imageToGo;}	
+	};
+	animate(opts);
+}
+
+function onClickPrev(){
+	if (currentImage == 0){
+		slideTo(imageNumber - 0);
+	} 		
+	else{
+		slideTo(currentImage - 1);
+	}		
+}
+
+function onClickNext(){
+	if (currentImage == imageNumber - 1){
+		slideTo(-1);
+	}		
+	else{
+		slideTo(currentImage + 1);
+	}		
+}
+
+window.onload = init;
+</script>
+</head>
+</html>
